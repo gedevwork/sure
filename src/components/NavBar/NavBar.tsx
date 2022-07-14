@@ -1,5 +1,6 @@
+import { forwardRef } from 'react';
 import { Link, Box } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, NavLink as BaseNavLink, NavLinkProps } from 'react-router-dom';
 type TNavBar = {
   links: {
     text: string;
@@ -7,6 +8,13 @@ type TNavBar = {
     'data-testid'?: string;
   }[];
 };
+
+const activeStyle = {
+  textDecoration: 'underline'
+};
+const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
+  (props, ref) => <BaseNavLink ref={ref} {...props} style={({ isActive }) => ({ ...props.style, ...(isActive ? activeStyle : undefined)})} />
+  );
 
 function NavBar({ links }: TNavBar) {
   return (
@@ -31,7 +39,7 @@ function NavBar({ links }: TNavBar) {
 
       {links.map(({ text, href, 'data-testid': dataTestId }) => (
         <Link
-          component={RouterLink}
+          component={NavLink}
           key={href}
           to={href}
           color="#fff"
